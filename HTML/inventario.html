@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Inventario</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <h1><a href="/">Taller de Puertas</a></h1>
+      <nav>
+        <ul>
+          <li><a href="/">Inicio</a></li>
+          <li><a href="/catalogo">Catálogo</a></li>
+          <li><a href="/inventario">Inventario</a></li>
+          <li><a href="/login">Iniciar Sesión</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section id="inventario" class="container">
+    <h2>Gestión de Inventario</h2>
+    
+    <button id="agregar-producto" class="btn-agregar">Agregar Producto</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre del Producto</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Puerta Automática de Madera</td>
+          <td>$500</td>
+          <td>20</td>
+          <td>
+            <button class="btn-editar">Editar</button>
+            <button class="btn-eliminar">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Portón Manual de Metal</td>
+          <td>$300</td>
+          <td>10</td>
+          <td>
+            <button class="btn-editar">Editar</button>
+            <button class="btn-eliminar">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 Taller de Puertas. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+  </script>
+
+</body>
+</html>
