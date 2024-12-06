@@ -8,6 +8,7 @@
     <!-- Enlace al archivo CSS -->
 </head>
 <body>
+  <!-- Encabezado de la página -->
   <header>
     <div class="container">
       <h1><a href="index.html">Taller de Puertas</a></h1>
@@ -15,11 +16,15 @@
         <ul>
           <li><a href="index.html">Inicio</a></li>
           <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="inventario.html">Inventario</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
           <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="facturacion.html">Facturación</a></li>
         </ul>
       </nav>
     </div>
   </header>
+
   <body>
     <div class="carrito-container">
       <h2>Carrito de Compras</h2>
@@ -37,5 +42,9 @@
       </ul>
       <button>Proceder al Pago</button>
     </div>
-  </body>
+  
+        <button id="btn-actualizar-estado">Actualizar Estado del Carrito</button>
+        <script src="../js/estado_carrito.js"></script>
+        </body>
+        
 </html>

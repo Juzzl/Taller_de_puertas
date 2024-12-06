@@ -7,20 +7,49 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <!-- Encabezado -->
-    <header>
-      <div class="container">
-        <h1><a href="/">Taller de Puertas</a></h1>
-        <nav>
-          <ul>
-            <li><a href="index.com">Inicio</a></li>
-            <li><a href="catalogo.html">Catálogo</a></li>
-            <li><a href="inventario.html">Inventario</a></li>
-            <li><a href="login.html">Iniciar Sesión</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+  <!-- Encabezado de la página -->
+  <header>
+    <div class="container">
+      <h1><a href="index.html">Taller de Puertas</a></h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="inventario.html">Inventario</a></li>
+          <li><a href="carrito.html">Carrito</a></li>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="facturacion.html">Facturación</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+    <section id="filtros" class="container">
+      <h2>Filtrar Productos</h2>
+      <form action="#" method="GET">
+        <label for="tipo">Tipo de puerta:</label>
+        <select id="tipo" name="tipo">
+          <option value="automatica">Automática</option>
+          <option value="manual">Manual</option>
+        </select>
+
+        <label for="material">Material:</label>
+        <select id="material" name="material">
+          <option value="madera">Madera</option>
+          <option value="metal">Metal</option>
+        </select>
+
+        <label for="color">Color:</label>
+        <input
+          type="text"
+          id="color"
+          name="color"
+          placeholder="Ej. Blanco, Negro, etc."
+        />
+
+        <button type="submit">Filtrar</button>
+      </form>
+    </section>
 
     <!-- Sección de Inventario -->
     <section id="inventario" class="container">
@@ -80,5 +109,9 @@
     <script>
       // Aquí puedes agregar lógica para manejar el agregar, editar y eliminar productos.
     </script>
-  </body>
+  
+        <div id="inventario-container"></div>
+        <script src="../js/inventario.js"></script>
+        </body>
+        
 </html>
