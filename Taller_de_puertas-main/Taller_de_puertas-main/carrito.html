@@ -3,48 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carrito de Compras</title>
+    <title>Carrito</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
-    <!-- Enlace al archivo CSS -->
-</head>
-<body>
-  <!-- Encabezado de la página -->
-  <header>
-    <div class="container">
-      <h1><a href="index.html">Taller de Puertas</a></h1>
-      <nav>
-        <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogo.html">Catálogo</a></li>
-          <li><a href="inventario.html">Inventario</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
-          <li><a href="login.html">Iniciar Sesión</a></li>
-          <li><a href="facturacion.html">Facturación</a></li>
-        </ul>
-      </nav>
+  </head>
+  <body class="bg-light">
+    <header class="bg-primary text-white">
+      <div
+        class="container d-flex justify-content-between align-items-center py-3"
+      >
+        <h1 class="mb-0">Taller de Puertas</h1>
+        <nav>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="catalogo.html">Catálogo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="carrito.html">Carrito</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="backend/logout.php"
+                >Cerrar Sesión</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <!-- Carrito -->
+    <div class="container my-5">
+      <h2 class="text-center mb-4">Carrito de Compras</h2>
+      <div id="carrito-container"></div>
+      <div class="text-center mt-4">
+        <button id="realizar-compra" class="btn btn-success btn-lg">
+          Realizar Compra
+        </button>
+      </div>
     </div>
-  </header>
+    <footer class="bg-primary text-white text-center py-3">
+      <p class="mb-0">
+        &copy; 2024 Taller de Puertas. Todos los derechos reservados.
+      </p>
+    </footer>
 
-  <body>
-    <div class="carrito-container">
-      <h2>Carrito de Compras</h2>
-      <ul>
-        <li>
-          <span>Producto 1</span>
-          <span>$20.00</span>
-          <button>Eliminar</button>
-        </li>
-        <li>
-          <span>Producto 2</span>
-          <span>$15.00</span>
-          <button>Eliminar</button>
-        </li>
-      </ul>
-      <button>Proceder al Pago</button>
-    </div>
-  
-        <button id="btn-actualizar-estado">Actualizar Estado del Carrito</button>
-        <script src="../js/estado_carrito.js"></script>
-        </body>
-        
+    <script src="js/carrito.js"></script>
+  </body>
 </html>

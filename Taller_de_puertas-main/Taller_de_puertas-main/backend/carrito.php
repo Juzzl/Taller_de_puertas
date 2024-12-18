@@ -1,38 +1,61 @@
 <?php
-
+session_start();
 header('Content-Type: application/json');
-include_once '../db.php';
+if (!isset($_SESSION['carrito'])) {
+    $_SESSION['carrito'] = [];
+}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-if ($method === 'GET') {
-    // Obtener productos en el carrito
-    $query = "SELECT cp.id_carrito_producto AS id, i.nombre, cp.cantidad, cp.subtotal
-              FROM Carrito_producto cp
-              JOIN Inventario i ON cp.id_producto = i.id_producto";
-    $result = $pdo->query($query);
+if ($method === 'POST') {
+    // Agregar producto al carrito
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (isset($input['id'], $input['nombre'], $input['precio'], $input['cantidad'])) {
+        $id = $input['id'];
+        $nombre = $input['nombre'];
+        $precio = $input['precio'];
+        $cantidad = $input['cantidad'];
 
-    $carrito = [];
-    if ($result->rowCount() > 0) {
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $carrito[] = $row;
+        if (isset($_SESSION['carrito'][$id])) {
+            $_SESSION['carrito'][$id]['cantidad'] += $cantidad;
+        } else {
+            $_SESSION['carrito'][$id] = [
+                'id' => $id,
+                'nombre' => $nombre,
+                'precio' => $precio,
+                'cantidad' => $cantidad
+            ];
         }
+        echo json_encode(["message" => "Producto agregado al carrito"]);
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "Datos incompletos"]);
     }
-
-    echo json_encode($carrito);
+} elseif ($method === 'GET') {
+    // Mostrar todos los productos del carrito
+    echo json_encode($_SESSION['carrito']);
 } elseif ($method === 'DELETE') {
     // Eliminar un producto del carrito
-    $id = $_GET['id'] ?? null;
-    if ($id) {
-        $query = "DELETE FROM Carrito_producto WHERE id_carrito_producto = ?";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$id]);
-
-        echo json_encode(["success" => $stmt->rowCount() > 0]);
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (isset($input['id'])) {
+        $id = $input['id'];
+        if (isset($_SESSION['carrito'][$id])) {
+            unset($_SESSION['carrito'][$id]);
+            echo json_encode(["message" => "Producto eliminado del carrito"]);
+        } else {
+            http_response_code(404);
+            echo json_encode(["error" => "Producto no encontrado en el carrito"]);
+        }
     } else {
-        echo json_encode(["error" => "ID no proporcionado"]);
+        http_response_code(400);
+        echo json_encode(["error" => "ID del producto no especificado"]);
     }
+} elseif ($method === 'PUT') {
+    // Opcion para realizar la compra
+    $_SESSION['carrito'] = [];
+    echo json_encode(["message" => "Compra realizada con éxito"]);
 } else {
+    http_response_code(405);
     echo json_encode(["error" => "Método no permitido"]);
 }
 ?>

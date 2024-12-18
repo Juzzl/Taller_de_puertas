@@ -1,53 +1,41 @@
 <?php
 
-header('Content-Type: application/json');
-include_once '../db.php';
+require 'db.php';
+session_start();
 
-$method = $_SERVER['REQUEST_METHOD'];
+if (!isset($_SESSION['usuario_id'])) {
+    die("Usuario no autenticado.");
+}
 
-if ($method === 'POST') {
-    // Crear una nueva factura
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id_usuario = $data['id_usuario'] ?? null;
-    $id_carrito = $data['id_carrito'] ?? null;
-    $id_metodo_de_pago = $data['id_metodo_de_pago'] ?? null;
-    $total = $data['total'] ?? null;
+$usuario_id = $_SESSION['usuario_id'];
 
-    if ($id_usuario && $id_carrito && $id_metodo_de_pago && $total) {
-        $query = "INSERT INTO Facturacion (id_usuario, id_carrito, id_metodo_de_pago, total, id_estado_factura)
-                  VALUES (?, ?, ?, ?, 1)";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$id_usuario, $id_carrito, $id_metodo_de_pago, $total]);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $carrito_id = $_POST['carrito_id'] ?? null;
 
-        echo json_encode(["success" => true, "message" => "Factura creada exitosamente."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Todos los campos son requeridos para crear la factura."]);
+    if (!$carrito_id) {
+        die("Carrito no especificado.");
     }
-} elseif ($method === 'GET') {
-    // Consultar facturas
-    $id_usuario = $_GET['id_usuario'] ?? null;
 
-    if ($id_usuario) {
-        $query = "SELECT f.id_factura, f.fecha_creacion, f.total, e.descripcion AS estado, m.descripcion AS metodo_pago
-                  FROM Facturacion f
-                  JOIN Estado_factura e ON f.id_estado_factura = e.id_estado_factura
-                  JOIN Metodo_de_pago m ON f.id_metodo_de_pago = m.id_metodo_de_pago
-                  WHERE f.id_usuario = ?";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$id_usuario]);
+    try {
+        $stmt = $pdo->prepare("SELECT SUM(cp.cantidad * cp.precio_unitario) AS total 
+                               FROM CarritoProducto cp 
+                               WHERE cp.carrito_id = ?");
+        $stmt->execute([$carrito_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $facturas = [];
-        if ($stmt->rowCount() > 0) {
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $facturas[] = $row;
-            }
+        if (!$result || !$result['total']) {
+            die("El carrito está vacío o no existe.");
         }
 
-        echo json_encode($facturas);
-    } else {
-        echo json_encode(["success" => false, "message" => "ID de usuario no proporcionado."]);
+        $total = $result['total'];
+
+        $stmt = $pdo->prepare("INSERT INTO Factura (usuario_id, carrito_id, total) VALUES (?, ?, ?)");
+        $stmt->execute([$usuario_id, $carrito_id, $total]);
+        $factura_id = $pdo->lastInsertId();
+
+        echo "Factura generada con éxito. ID de factura: " . $factura_id;
+    } catch (PDOException $e) {
+        echo "Error al generar la factura: " . $e->getMessage();
     }
-} else {
-    echo json_encode(["success" => false, "message" => "Método no permitido."]);
 }
 ?>
