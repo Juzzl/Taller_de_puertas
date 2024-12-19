@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="bg-light">
+    <!-- Header -->
+    <header class="bg-primary text-white">
+      <div
+        class="container d-flex justify-content-between align-items-center py-3"
+      >
+        <h1 class="mb-0">Taller de Puertas</h1>
+        <nav>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="index.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="catalogo.html">Catálogo</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="inventario.html">Inventario</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="carrito.html">Carrito</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="facturacion.html">Facturación</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="backend/logout.php"
+                >Cerrar Sesión</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Catálogo -->
+    <div class="container my-5">
+      <h2 class="text-center mb-4">Catálogo de Puertas</h2>
+      <div class="row mb-4">
+        <div class="col-md-5">
+          <select id="filter-categoria" class="form-control">
+            <option value="">Todas las Categorías</option>
+          </select>
+        </div>
+        <div class="col-md-5">
+          <select id="filter-tipo" class="form-control">
+            <option value="">Todos los Tipos</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button id="filter-btn" class="btn btn-primary btn-block">
+            Filtrar
+          </button>
+        </div>
+      </div>
+      <div id="product-list" class="row">
+        <!-- Productos cargados dinámicamente -->
+      </div>
+      <div
+        id="message"
+        class="alert alert-warning d-none text-center"
+        role="alert"
+      >
+        No se encontraron productos
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-primary text-white text-center py-3">
+      <p class="mb-0">
+        &copy; 2024 Taller de Puertas. Todos los derechos reservados.
+      </p>
+    </footer>
+
+    <script src="js/catalogo.js"></script>
+  </body>
+</html>

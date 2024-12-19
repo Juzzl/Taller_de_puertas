@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventario - Taller de Puertas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="bg-primary text-white">
+    <div class="container d-flex justify-content-between align-items-center py-3">
+      <h1 class="mb-0">Taller de Puertas</h1>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link text-white" href="index.html">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="catalogo.html">Catálogo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="inventario.html">Inventario</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="carrito.html">Carrito</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="facturacion.html">Facturacion</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" href="backend/logout.php"
+              >Cerrar Sesión</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  
+  
+
+  <main>
+    <section>
+      <h2>Gestión de Inventario</h2>
+      <table id="inventario-tabla" class="tabla-inventario">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Categoría</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Filas generadas dinámicamente -->
+        </tbody>
+      </table>
+      <button id="btn-agregar-producto" class="btn">Agregar Producto</button>
+    </section>
+
+    <!-- Modal de agregar producto -->
+    <div id="modal-agregar-producto" class="modal">
+      <div class="modal-content">
+        <span id="cerrar-modal" class="cerrar">&times;</span>
+        <h2>Agregar Producto</h2>
+        <form id="form-agregar-producto" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="precio">Precio:</label>
+            <input type="number" step="0.01" id="precio" name="precio" required />
+          </div>
+          <div class="form-group">
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" id="cantidad" name="cantidad" required />
+          </div>
+          <div class="form-group">
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" class="descripcion-textarea"></textarea>
+          </div>          
+          <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria" required></select>
+          </div>
+          <div class="form-group">
+            <label for="tipo_producto">Tipo:</label>
+            <select id="tipo_producto" name="tipo" required>  </select>
+
+          </div>
+          <div class="form-group">
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" required />
+          </div>
+          <button type="submit">Agregar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal de editar producto -->
+    <div id="modal-editar-producto" class="modal">
+      <div class="modal-content">
+        <span id="cerrar-modal-editar" class="cerrar">&times;</span>
+        <h2>Editar Producto</h2>
+        <form id="form-editar-producto">
+          <input type="hidden" id="editar-id" name="id" />
+          <div class="form-group">
+            <label for="editar-nombre">Nombre:</label>
+            <input type="text" id="editar-nombre" name="nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="editar-precio">Precio:</label>
+            <input type="number" step="0.01" id="editar-precio" name="precio" required />
+          </div>
+          <div class="form-group">
+            <label for="editar-cantidad">Cantidad:</label>
+            <input type="number" id="editar-cantidad" name="cantidad" required />
+          </div>
+          <div class="form-group">
+            <label for="editar-descripcion">Descripción:</label>
+            <textarea id="editar-descripcion" name="descripcion"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="editar-categoria">Categoría:</label>
+            <select id="editar-categoria" name="categoria" required></select>
+          </div>
+          <div class="form-group">
+            <label for="editar-tipo_producto">Tipo:</label>
+            <select id="editar-tipo_producto" name="tipo_producto" required></select>
+          </div>
+          <div class="form-group">
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*" required />
+          </div>
+          <button type="submit">Guardar Cambios</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 Taller de Puertas</p>
+  </footer>
+
+  <script src="js/inventario.js"></script>
+</body>
+</html>

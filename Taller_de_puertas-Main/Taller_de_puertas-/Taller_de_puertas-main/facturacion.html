@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carrito</title>
+    <title>Factura</title>
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
@@ -28,6 +28,9 @@
               <a class="nav-link text-white" href="carrito.html">Carrito</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link text-white" href="facturacion.html">Facturacion</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link text-white" href="backend/logout.php"
                 >Cerrar Sesión</a
               >
@@ -36,13 +39,13 @@
         </nav>
       </div>
     </header>
-    <!-- Carrito -->
+    <!-- Facturación -->
     <div class="container my-5">
-      <h2 class="text-center mb-4">Carrito de Compras</h2>
-      <div id="carrito-container"></div>
-      <div class="text-center mt-4">
-        <button id="realizar-compra" class="btn btn-success btn-lg">
-          Realizar Compra
+      <h2 class="text-center mb-4">Factura</h2>
+      <div id="factura-container" class="mb-4"></div>
+      <div class="text-center">
+        <button id="generar-factura" class="btn btn-success btn-lg">
+          Generar Factura
         </button>
       </div>
     </div>
@@ -52,6 +55,7 @@
       </p>
     </footer>
 
-    <script src="js/carrito.js"></script>
+    <script src="js/facturacion.js"></script>
   </body>
 </html>
+
