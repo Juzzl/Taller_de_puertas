@@ -1,62 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Facturación</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Facturación</h1>
-          <!-- Encabezado de la página -->
-    <div class="container">
-      <h1><a href="index.html">Taller de Puertas</a></h1>
-      <nav>
-        <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogo.html">Catálogo</a></li>
-          <li><a href="inventario.html">Inventario</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
-          <li><a href="login.html">Iniciar Sesión</a></li>
-          <li><a href="facturacion.html">Facturación</a></li>
-        </ul>
-      </nav>
-    </div>
+      <h1>Generar Factura</h1>
     </header>
     <main>
-      <div id="facturas-container">
-        <h2>Lista de Facturas</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Cliente</th>
-              <th>Total</th>
-              <th>Fecha</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Juan Pérez</td>
-              <td>$500.00</td>
-              <td>2024-12-07</td>
-              <td><button class="facturas-btn">Ver Detalle</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Maria López</td>
-              <td>$300.00</td>
-              <td>2024-12-06</td>
-              <td><button class="facturas-btn">Ver Detalle</button></td>
-            </tr>
-          </tbody>
-        </table>
-        <button class="facturas-btn">Generar Nueva Factura</button>
-      </div>
+      <form id="facturacion-form">
+        <label for="carrito-id">ID del Carrito:</label>
+        <input type="text" id="carrito-id" name="carrito-id" required />
+
+        <button type="button" id="generate-invoice">Generar Factura</button>
+      </form>
     </main>
-   
-</body>
+    <script src="js/facturacion.js"></script>
+  </body>
 </html>

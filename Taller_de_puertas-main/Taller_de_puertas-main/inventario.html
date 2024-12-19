@@ -3,115 +3,55 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestión de Inventario</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Inventario - Taller de Puertas</title>
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-  <!-- Encabezado de la página -->
-  <header>
-    <div class="container">
-      <h1><a href="index.html">Taller de Puertas</a></h1>
+    <header>
+      <h1>Taller de Puertas - Inventario</h1>
       <nav>
-        <ul>
-          <li><a href="index.html">Inicio</a></li>
-          <li><a href="catalogo.html">Catálogo</a></li>
-          <li><a href="inventario.html">Inventario</a></li>
-          <li><a href="carrito.html">Carrito</a></li>
-          <li><a href="login.html">Iniciar Sesión</a></li>
-          <li><a href="facturacion.html">Facturación</a></li>
-        </ul>
+        <a href="index.html">Inicio</a>
+        <a href="catalog.html">Catálogo</a>
+        <a href="cart.html">Carrito</a>
+        <a href="logout.html">Cerrar Sesión</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-    <section id="filtros" class="container">
-      <h2>Filtrar Productos</h2>
-      <form action="#" method="GET">
-        <label for="tipo">Tipo de puerta:</label>
-        <select id="tipo" name="tipo">
-          <option value="automatica">Automática</option>
-          <option value="manual">Manual</option>
-        </select>
+    <main>
+      <section>
+        <h2>Gestión de Inventario</h2>
+        <div id="inventario-container"></div>
+      </section>
 
-        <label for="material">Material:</label>
-        <select id="material" name="material">
-          <option value="madera">Madera</option>
-          <option value="metal">Metal</option>
-        </select>
+      <section>
+        <h2>Agregar Producto</h2>
+        <form id="form-agregar-producto">
+          <label for="nombre">Nombre del producto:</label>
+          <input type="text" id="nombre" name="nombre" required />
 
-        <label for="color">Color:</label>
-        <input
-          type="text"
-          id="color"
-          name="color"
-          placeholder="Ej. Blanco, Negro, etc."
-        />
+          <label for="precio">Precio unitario:</label>
+          <input type="number" step="0.01" id="precio" name="precio" required />
 
-        <button type="submit">Filtrar</button>
-      </form>
-    </section>
+          <label for="cantidad">Cantidad en inventario:</label>
+          <input type="number" id="cantidad" name="cantidad" required />
 
-    <!-- Sección de Inventario -->
-    <section id="inventario" class="container">
-      <h2>Gestión de Inventario</h2>
+          <label for="descripcion">Descripción:</label>
+          <textarea id="descripcion" name="descripcion"></textarea>
 
-      <!-- Botón para agregar producto -->
-      <button id="agregar-producto" class="btn-agregar">
-        Agregar Producto
-      </button>
+          <label for="categoria">Categoría:</label>
+          <select id="categoria" name="categoria"></select>
+          <label for="tipo_producto">Tipo de producto:</label>
+          <select id="tipo_producto" name="tipo_producto"></select>
 
-      <!-- Tabla de productos -->
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre del Producto</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Ejemplo de producto -->
-          <tr>
-            <td>1</td>
-            <td>Puerta Automática de Madera</td>
-            <td>$500</td>
-            <td>20</td>
-            <td>
-              <button class="btn-editar">Editar</button>
-              <button class="btn-eliminar">Eliminar</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Portón Manual de Metal</td>
-            <td>$300</td>
-            <td>10</td>
-            <td>
-              <button class="btn-editar">Editar</button>
-              <button class="btn-eliminar">Eliminar</button>
-            </td>
-          </tr>
-          <!-- Agrega más productos según sea necesario -->
-        </tbody>
-      </table>
-    </section>
+          <button type="submit">Agregar Producto</button>
+        </form>
+      </section>
+    </main>
 
-    <!-- Pie de página -->
     <footer>
-      <div class="container">
-        <p>&copy; 2024 Taller de Puertas. Todos los derechos reservados.</p>
-      </div>
+      <p>&copy; 2024 Taller de Puertas</p>
     </footer>
 
-    <!-- JavaScript (Opcional, para funcionalidades futuras) -->
-    <script>
-      // Aquí puedes agregar lógica para manejar el agregar, editar y eliminar productos.
-    </script>
-  
-        <div id="inventario-container"></div>
-        <script src="../js/inventario.js"></script>
-        </body>
-        
+    <script src="js/inventario.js"></script>
+  </body>
 </html>

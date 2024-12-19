@@ -2,99 +2,89 @@ CREATE DATABASE IF NOT EXISTS taller_de_puertas;
 USE taller_de_puertas;
 
 CREATE TABLE Rol (
-    id_rol INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
-    apellido1 VARCHAR(50) NOT NULL,
-    apellido2 VARCHAR(50),
-    contraseña VARCHAR(255) NOT NULL,
+    apellido_paterno VARCHAR(50) NOT NULL,
+    apellido_materno VARCHAR(50),
     email VARCHAR(100) NOT NULL UNIQUE,
-    id_rol INT NOT NULL,
-    FOREIGN KEY (id_rol) REFERENCES Rol(id_rol)
-);
-
-CREATE TABLE Estado_carrito (
-    id_estado_carrito INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE Carrito (
-    id_carrito INT AUTO_INCREMENT PRIMARY KEY,
-    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT NOT NULL,
-    id_estado_carrito INT NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_estado_carrito) REFERENCES Estado_carrito(id_estado_carrito)
+    password VARCHAR(255) NOT NULL,
+    rol_id INT NOT NULL,
+    FOREIGN KEY (rol_id) REFERENCES Rol(id)
 );
 
 CREATE TABLE Categoria (
-    id_categoria INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(100) NOT NULL
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE Tipo_producto (
-    id_tipo_producto INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(100) NOT NULL
+CREATE TABLE TipoProducto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE Inventario (
-    id_producto INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    precio_unitario DECIMAL(10, 2) NOT NULL,
-    descripcion TEXT,
-    cantidad_inventario INT NOT NULL,
-    id_categoria INT NOT NULL,
-    id_tipo_producto INT NOT NULL,
-    FOREIGN KEY (id_categoria) REFERENCES Categoria(id_categoria),
-    FOREIGN KEY (id_tipo_producto) REFERENCES Tipo_producto(id_tipo_producto)
+CREATE TABLE Producto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL UNIQUE,
+    descripcion VARCHAR(255),
+    precio DECIMAL(10, 2) NOT NULL,
+    cantidad INT NOT NULL,
+    categoria_id INT NOT NULL,
+    tipo_id INT NOT NULL,
+    FOREIGN KEY (categoria_id) REFERENCES Categoria(id),
+    FOREIGN KEY (tipo_id) REFERENCES TipoProducto(id)
 );
 
-CREATE TABLE Carrito_producto (
-    id_carrito_producto INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Carrito (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT,
+    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id)
+);
+
+CREATE TABLE CarritoProducto (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carrito_id INT NOT NULL,
+    producto_id INT NOT NULL,
     cantidad INT NOT NULL,
     precio_unitario DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL,
-    id_carrito INT NOT NULL,
-    id_producto INT NOT NULL,
-    FOREIGN KEY (id_carrito) REFERENCES Carrito(id_carrito),
-    FOREIGN KEY (id_producto) REFERENCES Inventario(id_producto)
+    subtotal DECIMAL(10, 2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
+    FOREIGN KEY (carrito_id) REFERENCES Carrito(id),
+    FOREIGN KEY (producto_id) REFERENCES Producto(id)
 );
 
-CREATE TABLE Estado_factura (
-    id_estado_factura INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE Metodo_de_pago (
-    id_metodo_de_pago INT AUTO_INCREMENT PRIMARY KEY,
-    descripcion VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE Facturacion (
-    id_factura INT AUTO_INCREMENT PRIMARY KEY,
-    fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE Factura (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    carrito_id INT NOT NULL,
     total DECIMAL(10, 2) NOT NULL,
-    id_usuario INT NOT NULL,
-    id_carrito INT NOT NULL,
-    id_estado_factura INT NOT NULL,
-    id_metodo_de_pago INT NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario),
-    FOREIGN KEY (id_carrito) REFERENCES Carrito(id_carrito),
-    FOREIGN KEY (id_estado_factura) REFERENCES Estado_factura(id_estado_factura),
-    FOREIGN KEY (id_metodo_de_pago) REFERENCES Metodo_de_pago(id_metodo_de_pago)
+    fecha DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(id),
+    FOREIGN KEY (carrito_id) REFERENCES Carrito(id)
 );
 
-INSERT INTO Rol (nombre) VALUES('Administrador'),('Usuario');
+-- Insertar registros iniciales
+INSERT INTO Rol (nombre) VALUES ('Admin'), ('Usuario');
+INSERT INTO Categoria (nombre) VALUES ('Puertas de Madera'), ('Puertas de Metal');
+INSERT INTO TipoProducto (nombre) VALUES ('Manual'), ('Automático');
 
-INSERT INTO Usuario (nombre, apellido1, apellido2, contraseña, email, id_rol) VALUES('Juan', 'Pérez', 'Gómez', '123456', 'juan.perez@example.com', 2),('Ana', 'Martínez', 'López', '123456', 'ana.martinez@example.com', 2),('Pedro', 'García', NULL, '123456', 'pedro.garcia@example.com', 1);
+select * from categoria;
+describe usuario;
 
-GRANT ALL PRIVILEGES ON taller_de_puertas.* TO 'root'@'localhost';
-ALTER USER 'root'@'localhost' IDENTIFIED BY '1234';
-FLUSH PRIVILEGES;
+-- Insertar Categorías de Puertas
+INSERT INTO Categoria (nombre) VALUES ('Puertas de Madera'), ('Puertas de Metal');
 
-ALTER TABLE Usuario MODIFY apellido2 VARCHAR(50) NULL;
-ALTER TABLE Usuario CHANGE contraseña password VARCHAR(255) NOT NULL;
+-- Insertar Tipos de Producto (Manual o Automático)
+INSERT INTO TipoProducto (nombre) VALUES ('Manual'), ('Automático');
+
+-- Insertar Productos (Puertas)
+INSERT INTO Producto (nombre, descripcion, precio, cantidad, categoria_id, tipo_id)
+VALUES
+('Puerta de Madera Manual', 'Puerta rústica de madera ideal para interiores', 250.00, 15, 1, 1),
+('Puerta de Madera Automática', 'Puerta de madera con sistema automático de apertura', 550.00, 5, 1, 2),
+('Puerta de Metal Manual', 'Puerta resistente de metal con cerradura manual', 300.00, 20, 2, 1),
+('Puerta de Metal Automática', 'Puerta metálica de alta seguridad con apertura automática', 800.00, 8, 2, 2);

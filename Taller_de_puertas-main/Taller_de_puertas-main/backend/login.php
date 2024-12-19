@@ -1,52 +1,75 @@
 <?php
-session_start();
-require 'db.php'; 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Content-Type: application/json');
 
-function login($email, $password){
-    try{
+require_once 'db.php';
+require_once 'message_log.php';
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+function userLogin($email, $password) {
+    try {
         global $pdo;
 
-        $sql = "SELECT * FROM Usuario WHERE email = :email";
+        $sql = "SELECT id, nombre, apellido_paterno, apellido_materno, password, rol_id 
+                FROM Usuario 
+                WHERE email = :email";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['email' => $email]);
+        $stmt->execute([':email' => $email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($user){
-            if(password_verify($password, $user['contraseña'])){
-                $_SESSION['user_id'] = $user["id_usuario"];
-                $_SESSION['user_role'] = $user["id_rol"]; 
-                return true;
-            }
+        if ($user && password_verify($password, $user['password'])) {
+            return $user;
+        } else {
+            return null;
         }
-        return false;
-    }catch(Exception $e){
-        logError($e->getMessage());
-        return false;
+    } catch (PDOException $e) {
+        error_log("Error al iniciar sesión: " . $e->getMessage());
+        return null;
     }
 }
 
-$method = $_SERVER['REQUEST_METHOD'];
+// Procesar la solicitud POST
+$input = json_decode(file_get_contents("php://input"), true);
 
-if($method == 'POST'){
-    if(isset($_POST['email']) && isset($_POST['contraseña'])){
-        $email = $_POST['email'];
-        $password = $_POST['contraseña'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($input['email']) && isset($input['password'])) {
+        $email = $input['email'];
+        $password = $input['password'];
 
-        if(login($email, $password)){
+        $user = userLogin($email, $password);
+
+        if ($user) {
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['nombre'] = $user['nombre'];
+            $_SESSION['rol_id'] = $user['rol_id'];
+
             http_response_code(200);
-            echo json_encode(["message" => "Login exitoso"]);
-        }else{
+            echo json_encode([
+                "message" => "Inicio de sesión exitoso",
+                "user" => [
+                    "id" => $user['id'],
+                    "nombre" => $user['nombre'],
+                    "apellido_paterno" => $user['apellido_paterno'],
+                    "apellido_materno" => $user['apellido_materno'],
+                    "email" => $email,
+                    "rol_id" => $user['rol_id']
+                ]
+            ]);
+        } else {
             http_response_code(401);
-            echo json_encode(["error" => "Email o contraseña incorrectos"]);
+            echo json_encode(["error" => "Credenciales incorrectas"]);
         }
 
     }else{
         http_response_code(400);
-        echo json_encode(["error" => "Email y contraseña son requeridos"]);
+        echo json_encode(["error" => "Faltan campos obligatorios: email, password"]);
     }
-
-}else{
+} else {
     http_response_code(405);
     echo json_encode(["error" => "Método no permitido"]);
 }

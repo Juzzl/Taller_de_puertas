@@ -1,71 +1,83 @@
 <?php
-header('Content-Type: application/json');
-include_once '../db.php';
 
-$method = $_SERVER['REQUEST_METHOD'];
+require 'db.php';
+session_start();
 
-if ($method === 'GET') {
-    // Obtener productos del inventario
-    $query = "SELECT id_producto, nombre, precio_unitario, descripcion, cantidad_inventario FROM Inventario";
-    $result = $pdo->query($query);
+if (!isset($_SESSION['usuario_id']) || $_SESSION['rol_id'] != 1) { // Solo administradores (rol_id = 1)
+    die("Acceso denegado.");
+}
 
-    $inventario = [];
-    if ($result->rowCount() > 0) {
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-            $inventario[] = $row;
-        }
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Obtener todos los productos
+    try {
+        $stmt = $pdo->query("SELECT p.id, p.nombre, p.descripcion, p.precio, p.cantidad, c.nombre AS categoria, t.nombre AS tipo 
+                             FROM Producto p
+                             JOIN Categoria c ON p.categoria_id = c.id
+                             JOIN TipoProducto t ON p.tipo_id = t.id");
+        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        header('Content-Type: application/json');
+        echo json_encode($productos);
+    } catch (PDOException $e) {
+        echo "Error al obtener el inventario: " . $e->getMessage();
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Agregar un nuevo producto
+    $nombre = $_POST['nombre'] ?? null;
+    $descripcion = $_POST['descripcion'] ?? null;
+    $precio = $_POST['precio'] ?? null;
+    $cantidad = $_POST['cantidad'] ?? null;
+    $categoria_id = $_POST['categoria_id'] ?? null;
+    $tipo_id = $_POST['tipo_id'] ?? null;
+
+    if (!$nombre || !$precio || !$cantidad || !$categoria_id || !$tipo_id) {
+        die("Por favor, completa todos los campos obligatorios.");
     }
 
-    echo json_encode($inventario);
-} elseif ($method === 'POST') {
-    // Agregar un producto nuevo al inventario
-    $data = json_decode(file_get_contents('php://input'), true);
-    $nombre = $data['nombre'] ?? null;
-    $precio = $data['precio_unitario'] ?? null;
-    $descripcion = $data['descripcion'] ?? null;
-    $cantidad = $data['cantidad_inventario'] ?? null;
-
-    if ($nombre && $precio && $cantidad) {
-        $query = "INSERT INTO Inventario (nombre, precio_unitario, descripcion, cantidad_inventario) VALUES (?, ?, ?, ?)";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$nombre, $precio, $descripcion, $cantidad]);
-
-        echo json_encode(["success" => true, "message" => "Producto agregado correctamente."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Todos los campos son requeridos."]);
+    try {
+        $stmt = $pdo->prepare("INSERT INTO Producto (nombre, descripcion, precio, cantidad, categoria_id, tipo_id) 
+                               VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$nombre, $descripcion, $precio, $cantidad, $categoria_id, $tipo_id]);
+        echo "Producto añadido al inventario.";
+    } catch (PDOException $e) {
+        echo "Error al añadir el producto: " . $e->getMessage();
     }
-} elseif ($method === 'PUT') {
-    // Actualizar un producto existente en el inventario
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['id_producto'] ?? null;
-    $nombre = $data['nombre'] ?? null;
-    $precio = $data['precio_unitario'] ?? null;
-    $descripcion = $data['descripcion'] ?? null;
-    $cantidad = $data['cantidad_inventario'] ?? null;
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    // Actualizar un producto existente
+    parse_str(file_get_contents("php://input"), $put_vars);
+    $id = $put_vars['id'] ?? null;
+    $nombre = $put_vars['nombre'] ?? null;
+    $descripcion = $put_vars['descripcion'] ?? null;
+    $precio = $put_vars['precio'] ?? null;
+    $cantidad = $put_vars['cantidad'] ?? null;
+    $categoria_id = $put_vars['categoria_id'] ?? null;
+    $tipo_id = $put_vars['tipo_id'] ?? null;
 
-    if ($id && $nombre && $precio && $cantidad) {
-        $query = "UPDATE Inventario SET nombre = ?, precio_unitario = ?, descripcion = ?, cantidad_inventario = ? WHERE id_producto = ?";
-        $stmt = $pdo->prepare($query);
-        $stmt->execute([$nombre, $precio, $descripcion, $cantidad, $id]);
-
-        echo json_encode(["success" => true, "message" => "Producto actualizado correctamente."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Todos los campos son requeridos."]);
+    if (!$id) {
+        die("ID del producto es obligatorio.");
     }
-} elseif ($method === 'DELETE') {
-    // Eliminar un producto del inventario
-    $id = $_GET['id_producto'] ?? null;
 
-    if ($id) {
-        $query = "DELETE FROM Inventario WHERE id_producto = ?";
-        $stmt = $pdo->prepare($query);
+    try {
+        $stmt = $pdo->prepare("UPDATE Producto SET nombre = ?, descripcion = ?, precio = ?, cantidad = ?, categoria_id = ?, tipo_id = ? WHERE id = ?");
+        $stmt->execute([$nombre, $descripcion, $precio, $cantidad, $categoria_id, $tipo_id, $id]);
+        echo "Producto actualizado.";
+    } catch (PDOException $e) {
+        echo "Error al actualizar el producto: " . $e->getMessage();
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Eliminar un producto
+    parse_str(file_get_contents("php://input"), $delete_vars);
+    $id = $delete_vars['id'] ?? null;
+
+    if (!$id) {
+        die("ID del producto es obligatorio.");
+    }
+
+    try {
+        $stmt = $pdo->prepare("DELETE FROM Producto WHERE id = ?");
         $stmt->execute([$id]);
-
-        echo json_encode(["success" => true, "message" => "Producto eliminado correctamente."]);
-    } else {
-        echo json_encode(["success" => false, "message" => "ID del producto no proporcionado."]);
+        echo "Producto eliminado.";
+    } catch (PDOException $e) {
+        echo "Error al eliminar el producto: " . $e->getMessage();
     }
-} else {
-    echo json_encode(["success" => false, "message" => "Método no permitido."]);
 }
 ?>

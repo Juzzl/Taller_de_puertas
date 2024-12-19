@@ -1,9 +1,9 @@
 <?php
-require 'message_log.php';
 session_start();
+ // Este metodo se va a usar para eliminar todas las variables de sesión
 session_unset();
 session_destroy();
 
-logDebug("Usuario cerro sesion");
-
-header('Location: /semana11/app-tareas/index.html');
+header("Location: ../login.html");
+exit();
+?>
