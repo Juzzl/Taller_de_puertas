@@ -1,4 +1,5 @@
 <?php
+<<<<<<< Updated upstream
 
 require 'message_log.php';
 
@@ -6,6 +7,12 @@ $host = getenv('DB_HOST')!== false ? getenv('DB_HOST') : 'localhost';
 $dbname = getenv('DB_NAME')!== false ? getenv('DB_NAME') :'taller_de_puertas';
 $user = getenv('DB_USER')!== false ? getenv('DB_USER') :'root';
 $password = getenv('DB_PASSWORD')!== false ? getenv('DB_PASSWORD') : '1234';
+=======
+$host = 'localhost';
+$dbname = 'taller_de_puertas';
+$user = 'root';
+$password = '2598.Jussl';
+>>>>>>> Stashed changes
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $password);

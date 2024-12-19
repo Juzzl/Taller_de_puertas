@@ -1,4 +1,5 @@
 <?php
+<<<<<<< Updated upstream
 header('Content-Type: application/json');
 include_once '../db.php';
 
@@ -67,5 +68,101 @@ if ($method === 'GET') {
     }
 } else {
     echo json_encode(["success" => false, "message" => "Método no permitido."]);
+=======
+require_once 'db.php';
+header('Content-Type: application/json');
+
+$request_method = $_SERVER['REQUEST_METHOD'];
+
+try {
+    switch ($request_method) {
+        case 'GET':
+            if (isset($_GET['id'])) {
+                // Obtener un producto por ID
+                $stmt = $pdo->prepare("SELECT * FROM Producto WHERE id = :id");
+                $stmt->execute([':id' => $_GET['id']]);
+                echo json_encode($stmt->fetch(PDO::FETCH_ASSOC));
+            } elseif (isset($_GET['categorias'])) {
+                // Obtener categorías
+                $stmt = $pdo->query("SELECT id, nombre FROM Categoria");
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            } elseif (isset($_GET['tipos'])) {
+                // Obtener tipos de producto
+                $stmt = $pdo->query("SELECT id, nombre FROM TipoProducto");
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            } else {
+                // Obtener todos los productos
+                $stmt = $pdo->query("SELECT p.id, p.nombre, p.descripcion, p.precio, p.cantidad, c.nombre AS categoria, t.nombre AS tipo
+                                     FROM Producto p
+                                     INNER JOIN Categoria c ON p.categoria_id = c.id
+                                     INNER JOIN TipoProducto t ON p.tipo_id = t.id");
+                echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+            }
+            break;
+
+            case 'POST':
+                $data = json_decode(file_get_contents('php://input'), true);
+            
+                // Verificar que todos los campos requeridos estén presentes
+                if (!isset($data['nombre'], $data['descripcion'], $data['precio'], $data['cantidad'], $data['categoria'], $data['tipo_producto'])) {
+                    http_response_code(400); // Bad Request
+                    echo json_encode(['error' => 'Faltan datos obligatorios para crear el producto.']);
+                    exit;
+                }
+            
+                try {
+                    $stmt = $pdo->prepare("INSERT INTO Producto (nombre, descripcion, precio, cantidad, categoria_id, tipo_id)
+                                            VALUES (:nombre, :descripcion, :precio, :cantidad, :categoria_id, :tipo_id)");
+                    $stmt->execute([
+                        ':nombre' => $data['nombre'],
+                        ':descripcion' => $data['descripcion'],
+                        ':precio' => $data['precio'],
+                        ':cantidad' => $data['cantidad'],
+                        ':categoria_id' => $data['categoria'],
+                        ':tipo_id' => $data['tipo_producto']
+                    ]);
+                    echo json_encode(['message' => 'Producto agregado exitosamente']);
+                } catch (PDOException $e) {
+                    http_response_code(500); // Internal Server Error
+                    echo json_encode(['error' => 'Error en la base de datos: ' . $e->getMessage()]);
+                }
+                break;
+            
+
+
+        case 'PUT':
+            // Actualizar un producto
+            $data = json_decode(file_get_contents('php://input'), true);
+            $stmt = $pdo->prepare("UPDATE Producto SET nombre = :nombre, descripcion = :descripcion, precio = :precio,
+                                   cantidad = :cantidad, categoria_id = :categoria_id, tipo_id = :tipo_id WHERE id = :id");
+            $stmt->execute([
+                ':id' => $data['id'],
+                ':nombre' => $data['nombre'],
+                ':descripcion' => $data['descripcion'],
+                ':precio' => $data['precio'],
+                ':cantidad' => $data['cantidad'],
+                ':categoria_id' => $data['categoria'],
+                ':tipo_id' => $data['tipo_producto']
+            ]);
+            echo json_encode(['message' => 'Producto actualizado exitosamente']);
+            break;
+
+        case 'DELETE':
+            // Eliminar un producto
+            $data = json_decode(file_get_contents('php://input'), true);
+            $stmt = $pdo->prepare("DELETE FROM Producto WHERE id = :id");
+            $stmt->execute([':id' => $data['id']]);
+            echo json_encode(['message' => 'Producto eliminado exitosamente']);
+            break;
+
+        default:
+            http_response_code(405);
+            echo json_encode(['message' => 'Método no permitido']);
+            break;
+    }
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Error en la operación: ' . $e->getMessage()]);
+>>>>>>> Stashed changes
 }
 ?>
