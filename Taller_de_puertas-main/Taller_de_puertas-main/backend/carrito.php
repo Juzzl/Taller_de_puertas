@@ -4,9 +4,9 @@ header('Content-Type: application/json');
 if (!isset($_SESSION['carrito'])) {
     $_SESSION['carrito'] = [];
 }
-
+ 
 $method = $_SERVER['REQUEST_METHOD'];
-
+ 
 if ($method === 'POST') {
     // Agregar producto al carrito
     $input = json_decode(file_get_contents('php://input'), true);
@@ -15,7 +15,7 @@ if ($method === 'POST') {
         $nombre = $input['nombre'];
         $precio = $input['precio'];
         $cantidad = $input['cantidad'];
-
+ 
         if (isset($_SESSION['carrito'][$id])) {
             $_SESSION['carrito'][$id]['cantidad'] += $cantidad;
         } else {

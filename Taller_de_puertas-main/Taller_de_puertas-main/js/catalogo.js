@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const filterCategoria = document.getElementById("filter-categoria");
   const filterTipo = document.getElementById("filter-tipo");
   const filterBtn = document.getElementById("filter-btn");
-
+ 
   async function cargarFiltros() {
     try {
       const response = await fetch("http://localhost:8000/backend/catalogo.php?action=filtros");
@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al cargar los filtros");
     }
   }
-  
-
+ 
   async function cargarProductos(categoria = "", tipo = "") {
     try {
       const params = new URLSearchParams({ categoria, tipo });
@@ -46,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al cargar los productos");
     }
   }
-
+ 
   function mostrarProductos(productos) {
     productContainer.innerHTML = "";
     if (productos.length === 0) {
@@ -54,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
     document.getElementById("message").classList.add("d-none");
-  
+ 
     productos.forEach((producto) => {
       const productCard = document.createElement("div");
       productCard.className = "col-md-4 mb-3";
@@ -65,29 +64,36 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <h5 class="card-title">${producto.nombre}</h5>
                 <p class="card-text">${producto.descripcion}</p>
                 <p><strong>Precio:</strong> $${producto.precio}</p>
-                <button class="btn btn-primary agregar-carrito" data-id="${producto.id}" data-nombre="${producto.nombre}" data-precio="${producto.precio}">
+                <button class="btn btn-primary agregar-carrito"
+                        data-id="${producto.id}"
+                        data-nombre="${producto.nombre}"
+                        data-precio="${producto.precio}">
                     Agregar al Carrito
                 </button>
             </div>
         </div>`;
       productContainer.appendChild(productCard);
     });
+ 
+    // Asociar el evento 'click' a los botones de agregar al carrito
+    document.querySelectorAll(".agregar-carrito").forEach((boton) => {
+      boton.addEventListener("click", agregarAlCarrito);
+    });
   }
-  
-
+ 
   async function agregarAlCarrito(event) {
     const boton = event.target;
     const id = boton.getAttribute("data-id");
     const nombre = boton.getAttribute("data-nombre");
     const precio = parseFloat(boton.getAttribute("data-precio"));
-
+ 
     try {
       const response = await fetch("http://localhost:8000/backend/carrito.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, nombre, precio, cantidad: 1 }),
       });
-
+ 
       if (response.ok) {
         const result = await response.json();
         alert(result.message);
@@ -99,13 +105,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al agregar el producto al carrito");
     }
   }
-
+ 
   filterBtn.addEventListener("click", () => {
     const categoria = filterCategoria.value;
     const tipo = filterTipo.value;
     cargarProductos(categoria, tipo);
   });
-
+ 
   cargarFiltros();
   cargarProductos();
 });

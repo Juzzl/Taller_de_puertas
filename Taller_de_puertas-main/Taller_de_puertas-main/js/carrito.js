@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const carritoContainer = document.getElementById("carrito-container");
   const realizarCompraBtn = document.getElementById("realizar-compra");
-
+ 
   // Cargar Carrito
   async function cargarCarrito() {
     try {
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al cargar el carrito");
     }
   }
-
+ 
   // Mostrar Carrito
   function mostrarCarrito(carrito) {
     carritoContainer.innerHTML = "";
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         '<p class="text-center">El carrito está vacío</p>';
       return;
     }
-
+ 
     for (const id in carrito) {
       const producto = carrito[id];
       const cartItem = document.createElement("div");
@@ -45,16 +45,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           `;
       carritoContainer.appendChild(cartItem);
     }
-
+ 
     document.querySelectorAll(".eliminar-carrito").forEach((boton) => {
       boton.addEventListener("click", eliminarDelCarrito);
     });
   }
-
+ 
   // Eliminar Producto del Carrito
   async function eliminarDelCarrito(event) {
     const id = event.target.getAttribute("data-id");
-
+ 
     try {
       const response = await fetch(
         "http://localhost:8000/backend/carrito.php",
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           body: JSON.stringify({ id }),
         }
       );
-
+ 
       if (response.ok) {
         const result = await response.json();
         alert(result.message);
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al eliminar el producto del carrito");
     }
   }
-
+ 
   // Realizar Compra
   async function realizarCompra() {
     try {
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           method: "PUT",
         }
       );
-
+ 
       if (response.ok) {
         const result = await response.json();
         alert(result.message);
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Error al realizar la compra");
     }
   }
-
+ 
   realizarCompraBtn.addEventListener("click", realizarCompra);
   cargarCarrito();
 });

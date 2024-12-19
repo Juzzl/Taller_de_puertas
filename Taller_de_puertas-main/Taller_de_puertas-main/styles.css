@@ -3,10 +3,15 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f8f9fa;
-  color: #333;
+  color: #000;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-image: url('./images/fondo.jpg'); /* Ruta correcta a la imagen */
+    background-size: cover; /* Ajusta la imagen para que cubra toda la pantalla */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-position: center; /* Centra la imagen */
+    background-attachment: fixed; /* Hace que el fondo se quede fijo al hacer scroll */
 }
 
 header {
@@ -174,7 +179,7 @@ footer {
 
 .tabla-inventario th, .tabla-inventario td {
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #000000;
 }
 
 .tabla-inventario th {
@@ -204,9 +209,8 @@ footer {
 }
 
 
-/* Estilo del modal */
 .modal {
-  display: none; 
+  display: none;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -216,12 +220,21 @@ footer {
   background-color: rgba(0, 0, 0, 0.5); 
 }
 
+
 .modal-content {
-  background-color: #fff;
+  background-color: #ffffff; 
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; 
+  width: 80%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+
+
+.modal-content * {
+  background-color: #ffffff !important; 
+  color: #000000; 
+  opacity: 1; 
 }
 
 .cerrar {
@@ -248,12 +261,20 @@ input, select, textarea {
   border: 1px solid #ccc;
 }
 
-button {
+.btn-editar {
   background-color: #4CAF50;
   color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
+}
+.btn-eliminar{
+  background-color: #af4c4c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+
 }
 
 button:hover {
